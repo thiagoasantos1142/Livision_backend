@@ -1,18 +1,17 @@
 <?php
 
-// app/Http/Requests/StoreVideoRequest.php
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreVideoRequest extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'title' => 'required|string|max:255',
@@ -25,7 +24,8 @@ class StoreVideoRequest extends FormRequest
             'published' => 'boolean',
             'category_id' => 'required|exists:categories,id',
             'season_id' => 'nullable|exists:seasons,id',
-            'episode_number' => 'nullable|integer|min:1'
+            'episode_number' => 'nullable|integer|min:1',
+            'video_file' => 'required|file|mimetypes:video/mp4,video/x-matroska|max:512000',
         ];
     }
 }

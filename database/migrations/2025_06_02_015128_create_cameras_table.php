@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('genres', function (Blueprint $table) {
+        Schema::create('cameras', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->foreignId('event_id')->constrained()->onDelete('cascade');
+            $table->string('label'); // Ex: “Câmera principal”, “Vista aérea”, etc.
+            $table->string('angle')->nullable(); // opcional
+            $table->boolean('is_live')->default(true);
             $table->timestamps();
         });
     }
@@ -23,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('genres');
+        Schema::dropIfExists('cameras');
     }
 };

@@ -1,0 +1,16 @@
+<?php
+
+// app/Infrastructure/Repositories/EloquentEventRepository.php
+namespace App\Infrastructure\Repositories;
+
+use App\Domain\Repositories\EventRepositoryInterface;
+use App\Models\Event;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+
+class EloquentEventRepository implements EventRepositoryInterface
+{
+    public function paginate(int $perPage = 15): LengthAwarePaginator
+    {
+        return Event::with('genre')->paginate($perPage);
+    }
+}

@@ -18,7 +18,9 @@ class Video extends Model
         'published',
         'category_id',
         'season_id',
-        'episode_number'
+        'episode_number',
+        'path',
+        'thumbnail',
     ];
     use HasFactory;
 

@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Genre extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+    ];
+
+    public function events()
+    {
+        return $this->belongsToMany(Event::class, 'event_genres');
+    }
 }

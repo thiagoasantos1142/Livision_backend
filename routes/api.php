@@ -1,7 +1,15 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\VideoController;
+use App\Http\Controllers\Api\GenreController;
+use App\Http\Controllers\Api\EventController;
+use App\Http\Controllers\Api\CameraController;
+use App\Http\Controllers\Api\CameraVideoController;
+use App\Http\Controllers\Api\UploadController;
+use App\Http\Controllers\Api\StreamingController;
+use App\Http\Controllers\Api\ListEventsController;
+
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,28 +28,26 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     
     Route::middleware('auth:sanctum')->group(function () {
+
         Route::post('/logout', [AuthController::class, 'logout']);
-        Route::get('/me', [AuthController::class, 'me']);
+        Route::get('/me', [AuthController::class, 'me']);        
 
-            
-        Route::post('/videos/upload', [VideoController::class, 'upload']);
-        Route::get('/videos/signed-url', [VideoController::class, 'getSignedUrl']);
-        Route::get('/videos/url', [VideoController::class, 'getUrl']);
-        Route::post('videos/{id}/upload', [VideoController::class, 'upload']);
+        Route::apiResource('genres', GenreController::class);
 
-        Route::prefix('videos')->group(function () {
-            Route::get('/', [VideoController::class, 'index']);      // Listar vídeos
-            Route::get('{id}', [VideoController::class, 'show']);    // Ver um vídeo
-            Route::post('/', [VideoController::class, 'store']);     // Criar vídeo
-            Route::put('{id}', [VideoController::class, 'update']);  // Atualizar vídeo
-            Route::delete('{id}', [VideoController::class, 'destroy']); // Deletar vídeo
-        });
+        Route::apiResource('events', EventController::class);
+        Route::apiResource('cameras', CameraController::class);
+        Route::apiResource('camera-videos', CameraVideoController::class);
+
+        Route::post('uploads/initiate', [UploadController::class, 'initiateUpload']);
+
+        Route::get('/streaming/url', [StreamingController::class, 'getStreamingUrl']);
+
+        Route::get('/events', [ListEventsController::class, 'index']);
 
     });
-});
+
 

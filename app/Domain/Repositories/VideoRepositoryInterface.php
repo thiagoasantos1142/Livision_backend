@@ -2,13 +2,17 @@
 
 namespace App\Domain\Repositories;
 
-use App\Domain\Entities\VideoEntity;
+use App\Domain\Entities\EventEntity;
 
-interface VideoRepositoryInterface
+interface EventRepositoryInterface
 {
-    public function all(): array;
-    public function find(int $id): ?VideoEntity;
-    public function create(array $data): VideoEntity;
-    public function update(int $id, array $data): VideoEntity;
+    public function findById(int $id): ?EventEntity;
+
+    public function getAll(): array;
+
+    public function create(EventEntity $event): EventEntity;
+
+    public function update(int $id, EventEntity $event): EventEntity;
+
     public function delete(int $id): bool;
 }
