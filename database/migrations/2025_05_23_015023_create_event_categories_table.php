@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('event_categories', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('event_type_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->text('description')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->string('slug')->unique();
+            $table->string('color')->nullable();
             $table->timestamps();
         });
 

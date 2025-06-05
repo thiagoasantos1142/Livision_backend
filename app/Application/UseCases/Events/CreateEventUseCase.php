@@ -3,6 +3,7 @@
 namespace App\Application\UseCases\Events;
 
 use App\Domain\Entities\EventEntity;
+use App\Domain\Entities\ParticipantEntity;
 use App\Domain\Repositories\EventRepositoryInterface;
 
 class CreateEventUseCase
@@ -13,7 +14,11 @@ class CreateEventUseCase
 
     public function execute(EventEntity $event): EventEntity
     {
-        return $this->eventRepository->create($event);
-    }
+        // Cria o evento principal
+        $createdEvent = $this->eventRepository->create($event);
 
+        
+
+        return $createdEvent;
+    }
 }

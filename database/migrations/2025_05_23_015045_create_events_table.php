@@ -14,11 +14,16 @@ return new class extends Migration
        Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('slug')->unique();
             $table->text('description')->nullable();
-            $table->enum('type', ['live', 'recorded']); // Ao vivo ou gravado
-            $table->enum('category', ['concert', 'sport', 'conference', 'other']); // ou FK se preferir
-            $table->timestamp('start_time')->nullable();
-            $table->timestamp('end_time')->nullable();
+            $table->text('general_info')->nullable();
+            $table->string('thumbnail')->nullable();
+            $table->enum('format', ['live', 'recorded']);
+            $table->foreignId('event_type_id')->constrained()->onDelete('cascade');
+            $table->foreignId('event_category_id')->constrained()->onDelete('cascade');
+            $table->dateTime('start_time')->nullable();
+            $table->dateTime('end_time')->nullable();
+            $table->string('location')->nullable();
             $table->boolean('is_open')->default(false);
             $table->boolean('published')->default(false);
             $table->timestamps();

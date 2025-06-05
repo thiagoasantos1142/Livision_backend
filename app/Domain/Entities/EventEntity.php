@@ -9,14 +9,19 @@ class EventEntity
     public function __construct(
         public ?int $id,
         public string $title,
+        public string $slug,
         public ?string $description,
-        public string $type,
-        public ?int $categoryId,
+        public string $format, // live ou recorded
+        public int $eventTypeId,
+        public int $eventCategoryId,
         public ?string $start_time,
         public ?string $end_time,
         public bool $is_open,
         public bool $published,
-        
+        public ?string $thumbnail = null,
+        public ?string $location = null,
+        public ?string $general_info = null,
+        public ?array $participants = [],
         public ?string $created_at = null,
         public ?string $updated_at = null,
     ) {}
@@ -26,27 +31,50 @@ class EventEntity
         return new self(
             id: $model->id,
             title: $model->title,
+            slug: $model->slug,
             description: $model->description,
-            type: $model->type,
-            categoryId: $model->category_id,
-            start_time: optional($model->start_time)?->toDateTimeString(),
-            end_time: optional($model->end_time)?->toDateTimeString(),
+            format: $model->format,
+            eventTypeId: $model->event_type_id,
+            eventCategoryId: $model->event_category_id,
+            start_time: $model->start_time,
+            end_time: $model->end_time,
             is_open: $model->is_open,
             published: $model->published,
+            location: $model->location,
+            thumbnail: $model->thumbnail,
+            general_info: $model->general_info,
+
+            participants: $model->participants
+                ? $model->participants->map(fn ($p) => new ParticipantEntity(
+                    id: $p->participant_id,
+                    name: $p->participant->name ?? '',
+                    type: $p->participant->type ?? '',
+                    role: $p->role
+                ))->toArray()
+                : null,
+
+            created_at: optional($model->created_at)?->toDateTimeString(),
+            updated_at: optional($model->updated_at)?->toDateTimeString(),
         );
     }
+
 
     public function toArray(): array
     {
         return [
             'title' => $this->title,
             'description' => $this->description,
-            'type' => $this->type,
-            'category_id' => $this->categoryId,
+            'format' => $this->format,
+            'event_type_id' => $this->eventTypeId,
+            'event_category_id' => $this->eventCategoryId,
             'start_time' => $this->start_time,
             'end_time' => $this->end_time,
             'is_open' => $this->is_open,
             'published' => $this->published,
+            'thumbnail' => $this->thumbnail,
+            'location' => $this->location,
+            'general_info' => $this->general_info,
+            'participants' => ParticipantResource::collection($this->participants),
         ];
     }
 }

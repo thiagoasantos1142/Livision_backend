@@ -18,13 +18,18 @@ class Event extends Model
 
     protected $fillable = [
         'title',
+        'slug', 
         'description',
-        'type',
-        'category',
+        'format',
+        'event_type_id',
+        'event_category_id',
         'start_time',
         'end_time',
         'is_open',
         'published',
+        'location',
+        'thumbnail',
+        'general_info',
     ];
 
     protected $casts = [
@@ -34,16 +39,10 @@ class Event extends Model
         'published' => 'boolean',
     ];
 
-    // Um evento tem muitas câmeras
-    public function cameras()
+ 
+    public function participants()
     {
-        return $this->hasMany(Camera::class, 'event_id', 'id');
-    }
-
-    // Muitos para muitos com genres
-    public function genres()
-    {
-        return $this->belongsToMany(Genre::class, 'event_genres', 'event_id', 'genre_id')->withTimestamps();
+        return $this->hasMany(EventParticipant::class)->with('participant');
     }
 
     public function category(): BelongsTo
@@ -51,65 +50,16 @@ class Event extends Model
         return $this->belongsTo(Category::class);
     }
 
-    // Um evento pode ter muitos vídeos
-    public function videos()
+    public function type(): BelongsTo
     {
-        return $this->hasMany(CameraVideo::class, 'event_id', 'id');
+        return $this->belongsTo(Type::class);
     }
-    // Um evento pode ter muitos áudios
-    public function audios()
+    public function cameras()
     {
-        return $this->hasMany(CameraAudio::class, 'event_id', 'id');
+        return $this->hasMany(Camera::class);
     }
-    // Um evento pode ter muitos arquivos de imagem
-    public function images()
+    public function cameraVideos()
     {
-        return $this->hasMany(CameraImage::class, 'event_id', 'id');
+        return $this->hasMany(CameraVideo::class);
     }
-    // Um evento pode ter muitos arquivos de legenda
-    public function subtitles()
-    {
-        return $this->hasMany(CameraSubtitle::class, 'event_id', 'id');
-    }
-    // Um evento pode ter muitos arquivos de transcrição
-    public function transcriptions()
-    {
-        return $this->hasMany(CameraTranscription::class, 'event_id', 'id');
-    }
-    // Um evento pode ter muitos arquivos de anotações
-    public function annotations()
-    {
-        return $this->hasMany(CameraAnnotation::class, 'event_id', 'id');
-    }
-    // Um evento pode ter muitos arquivos de metadados
-    public function metadata()
-    {
-        return $this->hasMany(CameraMetadata::class, 'event_id', 'id');
-    }
-    // Um evento pode ter muitos arquivos de logs
-    public function logs()
-    {
-        return $this->hasMany(CameraLog::class, 'event_id', 'id');
-    }
-    // Um evento pode ter muitos arquivos de relatórios
-    public function reports()
-    {
-        return $this->hasMany(CameraReport::class, 'event_id', 'id');
-    }
-    // Um evento pode ter muitos arquivos de análises
-    public function analyses()
-    {
-        return $this->hasMany(CameraAnalysis::class, 'event_id', 'id');
-    }
-    // Um evento pode ter muitos arquivos de backups
-    public function backups()
-    {
-        return $this->hasMany(CameraBackup::class, 'event_id', 'id');
-    }
-    // Um evento pode ter muitos arquivos de sincronização
-    public function synchronizations()
-    {
-        return $this->hasMany(CameraSynchronization::class, 'event_id', 'id');
-    }
-
 }

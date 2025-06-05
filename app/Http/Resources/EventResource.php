@@ -3,25 +3,41 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\EventTypeResource;
+use App\Http\Resources\EventCategoryResource;
+use App\Http\Resources\CameraResource;
+use App\Http\Resources\ParticipantResource;
+
 
 class EventResource extends JsonResource
 {
-    public function toArray($request): array
+    /**
+     * Transforma o recurso em array para JSON.
+     *
+     * @param  \\Illuminate\\Http\\Request  $request
+     * @return array
+     */
+    public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'title' => $this->title,
-            'description' => $this->description,
-            'type' => $this->type,
-            'category_id' => $this->categoryId,
-            'start_time' => $this->start_time,
-            'end_time' => $this->end_time,
-            'is_open' => $this->is_open,
-            'published' => $this->published,
-            'cameras' => !empty($this->cameras) 
-                ? CameraResource::collection($this->cameras) 
-                : null,
-
+            'title'            => $this->title,
+            'description'      => $this->description,
+            'format'           => $this->format,
+            'eventTypeId'      => $this->eventTypeId,
+            'eventCategoryId'  => $this->eventCategoryId,
+            'startTime'        => $this->start_time,
+            'endTime'          => $this->end_time,
+            'isOpen'           => $this->is_open,
+            'published'        => $this->published,
+            'location'         => $this->location,
+            'thumbnail'        => $this->thumbnail,
+            'generalInfo'      => $this->general_info,
+            'participants' => !empty($this->participants) 
+                ? ParticipantResource::collection($this->participants)
+                : [],
+            'eventType'        => new EventTypeResource($this->eventType ?? null),
+            'eventCategory'    => new EventCategoryResource($this->eventCategory ?? null),
+            'cameras'          => !empty($this->cameras) ? CameraResource::collection($this->cameras) : [],
         ];
     }
 }

@@ -5,14 +5,17 @@ namespace App\Application\UseCases\Events;
 use App\Domain\Entities\EventEntity;
 use App\Domain\Repositories\EventRepositoryInterface;
 
-class FindEventByIdUseCase
+class FindAllEventsUseCase
 {
     public function __construct(
         private EventRepositoryInterface $eventRepository
     ) {}
 
-    public function execute(int $id): ?EventEntity
+    /**
+     * @return EventEntity[]
+     */
+    public function execute(): array
     {
-        return $this->eventRepository->findById($id);
+        return $this->eventRepository->findAll();
     }
 }

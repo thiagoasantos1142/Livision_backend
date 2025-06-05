@@ -13,6 +13,6 @@ class UpdateEventUseCase
 
     public function execute(int $id, EventEntity $event): EventEntity
     {
-        return $eventRepository->update($id, $event);
+        return $this->eventRepository->update($id, $event);
     }
 }
