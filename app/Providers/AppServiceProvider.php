@@ -7,8 +7,6 @@ use App\Domain\Video\Services\VideoStorageServiceInterface;
 use App\Infrastructure\Services\AwsS3VideoStorage;
 use App\Infrastructure\Storage\S3VideoStorageService;
 use Illuminate\Support\ServiceProvider;
-use App\Domain\Repositories\GenreRepositoryInterface;
-use App\Infrastructure\Repositories\GenreRepository;
 use App\Domain\Repositories\EventRepositoryInterface;
 use App\Infrastructure\Repositories\EventRepository;
 use App\Domain\Repositories\CameraRepositoryInterface;
@@ -34,12 +32,21 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(VideoStorageServiceInterface::class, S3VideoStorageService::class);
         $this->app->bind(VideoStorageInterface::class, AwsS3VideoStorage::class);
         $this->app->bind(CloudFrontSignedUrlService::class);
-        $this->app->bind(GenreRepositoryInterface::class, GenreRepository::class);
         $this->app->bind(EventRepositoryInterface::class, EventRepository::class);
         $this->app->bind(CameraRepositoryInterface::class, CameraRepository::class);
         $this->app->bind(CameraVideoRepositoryInterface::class, CameraVideoRepository::class);
         $this->app->bind(S3ServiceInterface::class, AwsS3Service::class);
-
+        $this->app->bind(EventRepositoryInterface::class, EventRepository::class);
+        $this->app->bind(CameraRepositoryInterface::class, CameraRepository::class);
+        $this->app->bind(CameraVideoRepositoryInterface::class, CameraVideoRepository::class);
+        $this->app->bind(S3ServiceInterface::class, AwsS3Service::class);
+        $this->app->bind(CloudFrontSignedUrlService::class, function ($app) {
+            return new CloudFrontSignedUrlService(
+                config('aws.cloudfront.key_pair_id'),
+                config('aws.cloudfront.private_key'),
+                config('aws.cloudfront.domain')
+            );
+        });
         $this->app->singleton(S3Client::class, function () {
             return new S3Client([
                 'version' => 'latest',

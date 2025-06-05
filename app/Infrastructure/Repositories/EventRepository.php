@@ -54,7 +54,7 @@ class EventRepository implements EventRepositoryInterface
 
     public function find(int $id): ?EventEntity
     {
-        $model = Event::with(['cameras', 'genres'])->find($id);
+        $model = Event::with(['cameras.videos', 'participants'])->find($id);
 
         if (!$model) {
             return null;
@@ -65,7 +65,7 @@ class EventRepository implements EventRepositoryInterface
 
     public function all(): array
     {
-        return Event::with(['cameras', 'genres'])
+        return Event::with(['cameras', 'participants'])
             ->get()
             ->map(fn ($model) => EventEntity::fromModel($model))
             ->toArray();

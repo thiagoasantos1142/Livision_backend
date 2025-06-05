@@ -8,6 +8,8 @@ use App\Application\UseCases\Events\DeleteEventUseCase;
 use App\Application\UseCases\Events\FindEventByIdUseCase;
 use App\Application\UseCases\Events\GetAllEventsUseCase;
 use App\Application\UseCases\Events\UpdateEventUseCase;
+use App\Application\UseCases\Events\ShowEventUseCase;
+use App\Http\Resources\EventWithStreamingResource;
 use App\Domain\Entities\EventEntity;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
@@ -19,12 +21,14 @@ use Illuminate\Routing\Controller;
 
 class EventController extends Controller
 {
+    
     public function __construct(
         private GetAllEventsUseCase $getAllEvents,
         private FindEventByIdUseCase $findEventById,
         private CreateEventUseCase $createEvent,
         private UpdateEventUseCase $updateEvent,
         private DeleteEventUseCase $deleteEvent,
+        private ShowEventUseCase $showEventUseCase
     ) {}
 
     public function index()
@@ -33,15 +37,18 @@ class EventController extends Controller
         return EventResource::collection($events);
     }
 
-    public function show(int $id): JsonResponse
+    public function show($id)
     {
-        $event = $this->findById->execute($id);
+       $result = $this->showEventUseCase->execute($id);
 
-        if (!$event) {
-            return response()->json(['message' => 'Evento não encontrado'], 404);
-        }
+        // Correto: passa apenas o objeto de evento para o Resource
+        return response()->json([
+            'data' => [
+                'event' => new EventResource($result['event']),
+                'streaming_urls' => $result['streaming_urls'],
+            ],
+        ]);
 
-        return response()->json(new EventResource($event));
     }
 
      public function store(EventRequest $request)
@@ -141,5 +148,7 @@ class EventController extends Controller
         $this->deleteEvent->execute($id);
         return response()->json([], 204);
     }
+
+    
 }
     

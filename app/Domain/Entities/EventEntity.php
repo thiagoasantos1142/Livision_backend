@@ -22,6 +22,7 @@ class EventEntity
         public ?string $location = null,
         public ?string $general_info = null,
         public ?array $participants = [],
+        public ?array $cameras,
         public ?string $created_at = null,
         public ?string $updated_at = null,
     ) {}
@@ -43,7 +44,7 @@ class EventEntity
             location: $model->location,
             thumbnail: $model->thumbnail,
             general_info: $model->general_info,
-
+            cameras: $model->cameras?->toArray() ?? null,
             participants: $model->participants
                 ? $model->participants->map(fn ($p) => new ParticipantEntity(
                     id: $p->participant_id,
@@ -75,6 +76,11 @@ class EventEntity
             'location' => $this->location,
             'general_info' => $this->general_info,
             'participants' => ParticipantResource::collection($this->participants),
+            'cameras' => $this->cameras ? array_map(fn($camera) => [
+                'id' => $camera['id'],
+                'label' => $camera['label'],
+                'video_path' => $camera['video_path'] ?? null,
+            ], $this->cameras) : [],
         ];
     }
 }

@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\GenreController;
 use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\CameraController;
 use App\Http\Controllers\Api\CameraVideoController;
@@ -36,7 +35,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/me', [AuthController::class, 'me']);        
 
-        Route::apiResource('genres', GenreController::class);
 
         Route::apiResource('events', EventController::class);
         Route::apiResource('cameras', CameraController::class);
