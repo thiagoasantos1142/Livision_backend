@@ -8,6 +8,8 @@ use App\Application\UseCases\CameraVideos\DeleteCameraVideoUseCase;
 use App\Application\UseCases\CameraVideos\FindCameraVideoByIdUseCase;
 use App\Application\UseCases\CameraVideos\GetAllCameraVideosUseCase;
 use App\Application\UseCases\CameraVideos\UpdateCameraVideoUseCase;
+use App\Application\UseCases\Uploads\InitiateUploadUseCase;
+
 use App\Http\Requests\CameraVideoRequest;
 use App\Http\Resources\CameraVideoResource;
 use Illuminate\Routing\Controller;
