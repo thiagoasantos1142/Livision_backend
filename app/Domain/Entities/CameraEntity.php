@@ -30,6 +30,7 @@ class CameraEntity
     public static function fromModel(Camera $model): self
     {
         return new self(
+            id: $model->id,
             eventId: $model->event_id,
             label: $model->label,
             angle: $model->angle,

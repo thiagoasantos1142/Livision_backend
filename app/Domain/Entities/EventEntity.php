@@ -44,7 +44,10 @@ class EventEntity
             location: $model->location,
             thumbnail: $model->thumbnail,
             general_info: $model->general_info,
-            cameras: $model->cameras?->toArray() ?? null,
+            cameras: $model->cameras
+                ? $model->cameras->map(fn ($c) => CameraEntity::fromModel($c))->toArray()
+                : null,
+
             participants: $model->participants
                 ? $model->participants->map(fn ($p) => new ParticipantEntity(
                     id: $p->participant_id,

@@ -31,13 +31,22 @@ class EventResource extends JsonResource
             'published'        => $this->published,
             'location'         => $this->location,
             'thumbnail'        => $this->thumbnail,
-            'generalInfo'      => $this->general_info,
+            'generalInfo'      => $this->general_info,            
+            'eventType'        => new EventTypeResource($this->eventType ?? null),
+            'eventCategory'    => new EventCategoryResource($this->eventCategory ?? null),
+            'cameras' => !empty($this->cameras) ? array_map(function ($camera) {
+                return [
+                    'id' => $camera->id,
+                    'event_id' => $camera->eventId,
+                    'label' => $camera->label,
+                    'angle' => $camera->angle,
+                    'is_live' => $camera->isLive,
+                ];
+            }, $this->cameras) : [],
             'participants' => !empty($this->participants) 
                 ? ParticipantResource::collection($this->participants)
                 : [],
-            'eventType'        => new EventTypeResource($this->eventType ?? null),
-            'eventCategory'    => new EventCategoryResource($this->eventCategory ?? null),
-            'cameras'          => !empty($this->cameras) ? CameraResource::collection($this->cameras) : [],
+
         ];
     }
 }
