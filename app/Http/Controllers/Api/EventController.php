@@ -39,7 +39,7 @@ class EventController extends Controller
 
     public function show($id)
     {
-       $result = $this->showEventUseCase->execute($id);
+        $result = $this->showEventUseCase->execute($id);
 
         // Correto: passa apenas o objeto de evento para o Resource
         return response()->json([
@@ -91,10 +91,11 @@ class EventController extends Controller
             end_time: $dto->endTime,
             is_open: $dto->isOpen,
             published: $dto->published,
+            thumbnail: $dto->thumbnail,            
             location: $dto->location,
-            thumbnail: $dto->thumbnail,
             general_info: $dto->generalInfo,
-            participants: $dto->participants
+            participants: $dto->participants,
+            cameras: $request->cameras ?? null
         );
         $event = $this->createEvent->execute($entity);
 
