@@ -34,15 +34,13 @@ class EventResource extends JsonResource
             'generalInfo'      => $this->general_info,            
             'eventType'        => new EventTypeResource($this->eventType ?? null),
             'eventCategory'    => new EventCategoryResource($this->eventCategory ?? null),
-            'cameras' => !empty($this->cameras) ? array_map(function ($camera) {
+            'cameras'          => $this->cameras->map(function ($camera) {
                 return [
                     'id' => $camera->id,
-                    'event_id' => $camera->eventId,
-                    'label' => $camera->label,
-                    'angle' => $camera->angle,
-                    'is_live' => $camera->isLive,
+                    'name' => $camera->name,
+                    // etc.
                 ];
-            }, $this->cameras) : [],
+            }),
             'participants' => !empty($this->participants) 
                 ? ParticipantResource::collection($this->participants)
                 : [],
