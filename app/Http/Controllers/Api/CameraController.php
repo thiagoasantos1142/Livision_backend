@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Application\DTOs\Cameras\CameraDTO;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Application\UseCases\Cameras\CreateCameraUseCase;
 use App\Application\UseCases\Cameras\DeleteCameraUseCase;
 use App\Application\UseCases\Cameras\FindCameraByIdUseCase;
 use App\Application\UseCases\Cameras\GetAllCamerasUseCase;
 use App\Application\UseCases\Cameras\UpdateCameraUseCase;
+use App\Application\UseCases\Uploads\InitiateUploadUseCase;
 use App\Http\Requests\CameraRequest;
 use App\Http\Resources\CameraResource;
 use Illuminate\Routing\Controller;
@@ -20,6 +24,7 @@ class CameraController extends Controller
         private CreateCameraUseCase $createCamera,
         private UpdateCameraUseCase $updateCamera,
         private DeleteCameraUseCase $deleteCamera,
+        private InitiateUploadUseCase $initiateUploadUseCase,
     ) {}
 
     public function index()
@@ -37,12 +42,32 @@ class CameraController extends Controller
         return new CameraResource($camera);
     }
 
-    public function store(CameraRequest $request)
+    public function createWithUploadUrl(Request $request, int $eventId): JsonResponse
     {
-       $cameraDTO = new CameraDTO($eventId, $label, null, true);
+        $request->validate([
+            'label' => 'required|string',
+            'filename' => 'required|string'
+        ]);
 
-        $camera = $this->createCamera->execute($cameraDTO);
-        return new CameraResource($camera);
+        try {
+            $data = $this->initiateUploadUseCase->execute(
+                $eventId,
+                $request->input('label'),
+                $request->input('filename')
+            );
+
+            return response()->json($data);
+        } catch (\Throwable $e) {
+            Log::error('Erro ao criar câmera com upload', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'error' => 'Erro ao criar câmera com upload.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function update(CameraRequest $request, int $id)

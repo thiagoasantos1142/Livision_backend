@@ -23,5 +23,7 @@ interface EventRepositoryInterface
 
     public function addParticipant(int $eventId, int $participantId, string $role): void;
 
+    public function findByIdWithCamerasAndVideos(int $id): ?EventEntity;
+
 
 }

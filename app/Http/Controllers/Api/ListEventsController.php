@@ -8,6 +8,8 @@ use App\Application\UseCases\Events\ListEventsUseCase;
 use App\Http\Resources\EventResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Request;
+    use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class ListEventsController extends Controller
 {
@@ -15,7 +17,8 @@ class ListEventsController extends Controller
     {
     }
 
-    public function index(Request $request): AnonymousResourceCollection
+
+        public function index(Request $request): AnonymousResourceCollection
     {
         $perPage = (int) $request->query('per_page', 15);
 

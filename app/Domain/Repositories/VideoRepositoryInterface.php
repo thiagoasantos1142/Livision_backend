@@ -4,11 +4,12 @@ namespace App\Domain\Repositories;
 
 use App\Domain\Entities\EventEntity;
 
-interface EventRepositoryInterface
+interface VideoRepositoryInterface
 {
     public function findById(int $id): ?EventEntity;
 
     public function getAll(): array;
+
 
     public function create(EventEntity $event): EventEntity;
 

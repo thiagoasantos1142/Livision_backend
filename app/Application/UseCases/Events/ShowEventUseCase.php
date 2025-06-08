@@ -9,32 +9,28 @@ class ShowEventUseCase
 {
     public function __construct(
         private EventRepositoryInterface $eventRepository,
+        private GenerateStreamingUrlUseCase $generateStreamingUrl,
+
         private GenerateStreamingUrlUseCase $streamingUrlUseCase
     ) {}
 
     public function execute(int $id): array
     {
-        $event = $this->eventRepository->find($id);
-
+        $event = $this->eventRepository->findByIdWithCamerasAndVideos($id);
+        // Verifica se o evento foi encontrado
         if (!$event) {
             throw new \Exception("Event not found.");
         }
 
         $streamingUrls = [];
 
-        foreach ($event->cameras as $camera) {
-            $video = $camera->videos[0] ?? null;
-
-            if ($video && $video->path) {
-                $url = $this->streamingUrlUseCase->execute(
-                    bucket: 'livision-videos',
-                    key: $video->path,
-                    expiration: 3600
-                );
-
+       foreach ($event->cameras as $camera) {
+            foreach ($camera->videos ?? [] as $video) {
+                // Exemplo: videos/5/camera-1.mp4
+                $key = $video->path;
+                $url = $this->generateStreamingUrl->execute('livision-videos', $key);
                 $streamingUrls[] = [
                     'camera_id' => $camera->id,
-                    'camera_name' => $camera->name,
                     'url' => $url,
                 ];
             }

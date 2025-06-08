@@ -13,7 +13,9 @@ class CameraEntity
         public int $eventId,
         public string $label,
         public ?string $angle,
-        public bool $isLive
+        public bool $isLive,
+        public array $videos = [],
+
     ) {}
 
     public static function fromDTO(CameraDTO $dto): self

@@ -37,6 +37,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
         Route::apiResource('events', EventController::class);
+        Route::post('event/{eventId}/camera', [CameraController::class, 'createWithUploadUrl']);
+
         Route::apiResource('cameras', CameraController::class);
         Route::apiResource('camera-videos', CameraVideoController::class);
 

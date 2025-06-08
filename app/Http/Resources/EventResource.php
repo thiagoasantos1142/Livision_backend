@@ -20,6 +20,7 @@ class EventResource extends JsonResource
     public function toArray($request)
     {
         return [
+            "id"               => $this->id,
             'title'            => $this->title,
             'description'      => $this->description,
             'format'           => $this->format,
@@ -34,13 +35,14 @@ class EventResource extends JsonResource
             'generalInfo'      => $this->general_info,            
             'eventType'        => new EventTypeResource($this->eventType ?? null),
             'eventCategory'    => new EventCategoryResource($this->eventCategory ?? null),
-            'cameras'          => $this->cameras->map(function ($camera) {
-                return [
-                    'id' => $camera->id,
-                    'name' => $camera->name,
-                    // etc.
-                ];
-            }),
+            'cameras' => collect($this->cameras)->map(function ($camera) {
+                                            return [
+                                                'id' => $camera->id,
+                                                'name' => $camera->label,
+                                                // etc.
+                                            ];
+                                        }),
+
             'participants' => !empty($this->participants) 
                 ? ParticipantResource::collection($this->participants)
                 : [],

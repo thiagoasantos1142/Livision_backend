@@ -66,6 +66,8 @@ class EventEntity
     public function toArray(): array
     {
         return [
+            'id' => $this->id,
+            'slug' => $this->slug,
             'title' => $this->title,
             'description' => $this->description,
             'format' => $this->format,

@@ -2,6 +2,8 @@
 
 namespace App\Infrastructure\Repositories;
 
+use App\Domain\Entities\CameraEntity;
+use App\Domain\Entities\CameraVideoEntity;
 use App\Domain\Entities\EventEntity;
 use Illuminate\Support\Str;
 use App\Models\EventParticipant;
@@ -106,7 +108,7 @@ class EventRepository implements EventRepositoryInterface
     {
         return Event::with('participants')
             ->get()
-            ->map(fn($model) => EventEntity::fromModel($model))
+            ->map(fn ($model) => EventEntity::fromModel($model)->toArray())
             ->toArray();
     }
 
@@ -146,5 +148,38 @@ class EventRepository implements EventRepositoryInterface
         ]);
     }
 
+    public function findByIdWithCamerasAndVideos(int $id): ?EventEntity
+    {
+        $event = Event::with(['cameras.videos'])->findOrFail($id);
+
+        // Mapeamento manual para EventEntity
+        return new EventEntity(
+            id: $event->id,
+            title: $event->title,
+            slug: $event->slug,
+            description: $event->description,
+            format: $event->format,
+            eventTypeId: $event->event_type_id,
+            eventCategoryId: $event->event_category_id,
+            start_time: $event->start_time,
+            end_time: $event->end_time,
+            is_open: $event->is_open,
+            published: $event->published,
+            thumbnail: $event->thumbnail,
+            location: $event->location,
+            general_info: $event->general_info,
+            participants: [], // ou carregue os participantes também se necessário
+            cameras: $event->cameras->map(function ($camera) {
+                    return new CameraEntity(
+                        id: $camera->id,
+                        eventId: $camera->event_id,
+                        label: $camera->label,
+                        angle: $camera->angle,
+                        videos: $camera->videos->map(fn ($video) => CameraVideoEntity::fromModel($video))->toArray(),
+                        isLive: $camera->is_live
+                    );
+                })->toArray()
+        );
+}
 
 }

@@ -12,6 +12,6 @@ class GetAllEventsUseCase
 
     public function execute(): array
     {
-        return $eventRepository->getAll();
+        return $this->eventRepository->getAll();
     }
 }

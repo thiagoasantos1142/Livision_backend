@@ -6,35 +6,47 @@ use App\Models\CameraVideo;
 
 class CameraVideoEntity
 {
-    public function __construct(
+   public function __construct(
         public ?int $id,
-        public int $camera_id,
+        public int $cameraId,
         public string $filename,
         public string $path,
         public ?int $duration,
-        public ?string $recorded_at,
-    ) {}
+        public ?string $recordedAt,
+        public ?string $quality,
+        public ?string $mimeType,
+        public ?int $size,
+        public ?string $status
+    ) {}    
 
-    public static function fromModel(CameraVideo $model): self
+      public static function fromModel(CameraVideo $model): self
     {
         return new self(
             id: $model->id,
-            camera_id: $model->camera_id,
+            cameraId: $model->camera_id,
             filename: $model->filename,
             path: $model->path,
             duration: $model->duration,
-            recorded_at: optional($model->recorded_at)?->toDateTimeString()
+            recordedAt: optional($model->recorded_at)?->toDateTimeString(),
+            quality: $model->quality,
+            mimeType: $model->mime_type,
+            size: $model->size,
+            status: $model->status
         );
     }
 
     public function toArray(): array
     {
         return [
-            'camera_id' => $this->camera_id,
+            'camera_id' => $this->cameraId,
             'filename' => $this->filename,
             'path' => $this->path,
             'duration' => $this->duration,
-            'recorded_at' => $this->recorded_at,
+            'recorded_at' => $this->recordedAt,
+            'quality' => $this->quality,
+            'mime_type' => $this->mimeType,
+            'size' => $this->size,
+            'status' => $this->status,
         ];
     }
 }

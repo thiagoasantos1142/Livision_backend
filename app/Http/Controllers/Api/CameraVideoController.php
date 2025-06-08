@@ -13,6 +13,7 @@ use App\Application\UseCases\Uploads\InitiateUploadUseCase;
 use App\Http\Requests\CameraVideoRequest;
 use App\Http\Resources\CameraVideoResource;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 
 class CameraVideoController extends Controller
 {
@@ -56,10 +57,10 @@ class CameraVideoController extends Controller
             );
 
             $video = $this->createCameraVideo->execute($dto);
-            \Log::info('Video criado', ['video' => $video]);
+            Log::info('Video criado', ['video' => $video]);
             return new CameraVideoResource($video);
         } catch (\Throwable $e) {
-            \Log::error('Erro no store de CameraVideo: ' . $e->getMessage());
+            Log::error('Erro no store de CameraVideo: ' . $e->getMessage());
             return response()->json(['error' => 'Erro ao criar vídeo'], 500);
         }
     }
