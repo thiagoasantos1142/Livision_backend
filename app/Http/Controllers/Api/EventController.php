@@ -28,7 +28,9 @@ class EventController extends Controller
         private CreateEventUseCase $createEvent,
         private UpdateEventUseCase $updateEvent,
         private DeleteEventUseCase $deleteEvent,
-        private ShowEventUseCase $showEventUseCase
+        private ShowEventUseCase $showEventUseCase,
+        private DeleteEventUseCase $deleteEventUseCase
+        
     ) {}
 
     public function index()
@@ -144,10 +146,16 @@ class EventController extends Controller
         return response()->json(new EventResource($event));
     }
 
-    public function destroy(int $id)
+    public function destroy(int $id): JsonResponse
     {
-        $this->deleteEvent->execute($id);
-        return response()->json([], 204);
+        $deleted = $this->deleteEventUseCase->execute($id);
+
+        return response()->json([
+            'success' => $deleted,
+            'message' => $deleted
+                ? 'Evento deletado com sucesso.'
+                : 'Não foi possível deletar o evento.'
+        ], $deleted ? 200 : 404);
     }
 
     

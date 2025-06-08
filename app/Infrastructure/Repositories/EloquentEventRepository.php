@@ -13,4 +13,15 @@ class EloquentEventRepository implements EventRepositoryInterface
     {
         return Event::paginate($perPage);
     }
+
+    public function delete(int $id): bool
+    {
+        $event = Event::find($id);
+        
+        if (!$event) {
+            return false;
+        }
+
+        return $event->delete();
+    }
 }
