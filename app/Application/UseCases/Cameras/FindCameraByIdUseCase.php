@@ -10,7 +10,7 @@ class FindCameraByIdUseCase
         private CameraRepositoryInterface $cameraRepository
     ) {}
 
-    public function execute(int $id)
+    public function execute(int $id): CameraEntity|null
     {
         return $this->cameraRepository->findById($id);
     }

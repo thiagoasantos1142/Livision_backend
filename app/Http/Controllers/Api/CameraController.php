@@ -77,9 +77,18 @@ class CameraController extends Controller
         return new CameraResource($camera);
     }
 
-    public function destroy(int $id)
+    public function destroyFromEvent(int $eventId, int $cameraId)
     {
-        $this->deleteCamera->execute($id);
-        return response()->json([], 204);
+        // (Opcional) Valide se a câmera pertence ao evento informado
+        $camera = $this->findCameraById->execute($cameraId);
+
+        if (!$camera || $camera->event_id !== $eventId) {
+            return response()->json(['error' => 'Camera not found for this event.'], 404);
+        }
+
+        $this->deleteCamera->execute($cameraId);
+
+        return response()->json(['message' => 'Camera deleted successfully.'], 204);
     }
+
 }

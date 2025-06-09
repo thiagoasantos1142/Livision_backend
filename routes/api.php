@@ -47,6 +47,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         Route::get('/streaming/url', [StreamingController::class, 'getStreamingUrl']);
 
         Route::get('/events', [ListEventsController::class, 'index']);
+        
+        Route::delete('/event/{eventId}/camera/{cameraId}', [CameraController::class, 'destroyFromEvent']);
+
 
 
    // });
