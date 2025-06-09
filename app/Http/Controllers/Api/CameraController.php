@@ -82,7 +82,7 @@ class CameraController extends Controller
         // (Opcional) Valide se a câmera pertence ao evento informado
         $camera = $this->findCameraById->execute($cameraId);
 
-        if (!$camera || $camera->event_id !== $eventId) {
+        if (!$camera || $camera->getEventId() !== $eventId) {
             return response()->json(['error' => 'Camera not found for this event.'], 404);
         }
 

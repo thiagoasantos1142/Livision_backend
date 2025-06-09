@@ -2,6 +2,7 @@
 
 namespace App\Application\UseCases\Cameras;
 
+use App\Domain\Entities\CameraEntity;
 use App\Domain\Repositories\CameraRepositoryInterface;
 
 class FindCameraByIdUseCase
@@ -10,8 +11,9 @@ class FindCameraByIdUseCase
         private CameraRepositoryInterface $cameraRepository
     ) {}
 
-    public function execute(int $id): CameraEntity|null
+    public function execute(int $id): ?CameraEntity
     {
         return $this->cameraRepository->findById($id);
     }
 }
+

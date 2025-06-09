@@ -7,7 +7,8 @@ use App\Application\DTOs\Cameras\CameraDTO;
 
 class CameraEntity
 {
-    
+  
+
     public function __construct(
         public ?int $id,
         public int $eventId,
@@ -51,4 +52,10 @@ class CameraEntity
             'is_live' => $this->isLive,
         ];
     }
+
+
+    public function getEventId(): int
+    {
+        return $this->eventId;
+}
 }
